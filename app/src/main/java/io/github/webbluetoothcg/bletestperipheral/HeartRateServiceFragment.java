@@ -19,7 +19,6 @@ package io.github.webbluetoothcg.bletestperipheral;
 import android.app.Activity;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.os.Bundle;
 import android.os.ParcelUuid;
@@ -39,46 +38,21 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 
 public class HeartRateServiceFragment extends ServiceFragment {
   private static final String TAG = HeartRateServiceFragment.class.getCanonicalName();
   private static final int MIN_UINT = 0;
   private static final int MAX_UINT8 = (int) Math.pow(2, 8) - 1;
   private static final int MAX_UINT16 = (int) Math.pow(2, 16) - 1;
-  /**
-   * See <a href="https://developer.bluetooth.org/gatt/services/Pages/ServiceViewer.aspx?u=org.bluetooth.service.heart_rate.xml">
-   * Heart Rate Service</a>
-   */
-  private static final UUID HEART_RATE_SERVICE_UUID = UUID
-      .fromString("0000180D-0000-1000-8000-00805f9b34fb");
 
-  /**
-   * See <a href="https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml">
-   * Heart Rate Measurement</a>
-   */
-  private static final UUID HEART_RATE_MEASUREMENT_UUID = UUID
-      .fromString("00002A37-0000-1000-8000-00805f9b34fb");
   private static final int HEART_RATE_MEASUREMENT_VALUE_FORMAT = BluetoothGattCharacteristic.FORMAT_UINT8;
   private static final int INITIAL_HEART_RATE_MEASUREMENT_VALUE = 60;
   private static final int EXPENDED_ENERGY_FORMAT = BluetoothGattCharacteristic.FORMAT_UINT16;
   private static final int INITIAL_EXPENDED_ENERGY = 0;
 
-  /**
-   * See <a href="https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.body_sensor_location.xml">
-   * Body Sensor Location</a>
-   */
-  private static final UUID BODY_SENSOR_LOCATION_UUID = UUID
-      .fromString("00002A38-0000-1000-8000-00805f9b34fb");
   private static final int LOCATION_OTHER = 0;
-
-  /**
-   * See <a href="https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_control_point.xml">
-   * Heart Rate Control Point</a>
-   */
-  private static final UUID HEART_RATE_CONTROL_POINT_UUID = UUID
-      .fromString("00002A39-0000-1000-8000-00805f9b34fb");
 
   private BluetoothGattService mHeartRateService;
   private BluetoothGattCharacteristic mHeartRateMeasurementCharacteristic;
@@ -151,28 +125,30 @@ public class HeartRateServiceFragment extends ServiceFragment {
 
   public HeartRateServiceFragment() {
     mHeartRateMeasurementCharacteristic =
-        new BluetoothGattCharacteristic(HEART_RATE_MEASUREMENT_UUID,
+        new BluetoothGattCharacteristic(Const.HEART_RATE_MEASUREMENT_UUID,
             BluetoothGattCharacteristic.PROPERTY_NOTIFY,
             /* No permissions */ 0);
 
     mHeartRateMeasurementCharacteristic.addDescriptor(
-        Peripheral.getClientCharacteristicConfigurationDescriptor());
+        PeripheralActivity.getClientCharacteristicConfigurationDescriptor());
 
     mBodySensorLocationCharacteristic =
-        new BluetoothGattCharacteristic(BODY_SENSOR_LOCATION_UUID,
+        new BluetoothGattCharacteristic(Const.BODY_SENSOR_LOCATION_UUID,
             BluetoothGattCharacteristic.PROPERTY_READ,
             BluetoothGattCharacteristic.PERMISSION_READ);
 
     mHeartRateControlPoint =
-        new BluetoothGattCharacteristic(HEART_RATE_CONTROL_POINT_UUID,
+        new BluetoothGattCharacteristic(Const.HEART_RATE_CONTROL_POINT_UUID,
             BluetoothGattCharacteristic.PROPERTY_WRITE,
             BluetoothGattCharacteristic.PERMISSION_WRITE);
 
-    mHeartRateService = new BluetoothGattService(HEART_RATE_SERVICE_UUID,
-        BluetoothGattService.SERVICE_TYPE_PRIMARY);
-    mHeartRateService.addCharacteristic(mHeartRateMeasurementCharacteristic);
-    mHeartRateService.addCharacteristic(mBodySensorLocationCharacteristic);
-    mHeartRateService.addCharacteristic(mHeartRateControlPoint);
+      mHeartRateService = GattServiceBuilder.build(Const.HEART_RATE_SERVICE_UUID_STR,
+              Arrays.asList(mHeartRateMeasurementCharacteristic, mBodySensorLocationCharacteristic, mHeartRateControlPoint));
+//    mHeartRateService = new BluetoothGattService(Const.HEART_RATE_SERVICE_UUID,
+//        BluetoothGattService.SERVICE_TYPE_PRIMARY);
+//    mHeartRateService.addCharacteristic(mHeartRateMeasurementCharacteristic);
+//    mHeartRateService.addCharacteristic(mBodySensorLocationCharacteristic);
+//    mHeartRateService.addCharacteristic(mHeartRateControlPoint);
   }
 
 
@@ -224,7 +200,8 @@ public class HeartRateServiceFragment extends ServiceFragment {
 
   @Override
   public ParcelUuid getServiceUUID() {
-    return new ParcelUuid(HEART_RATE_SERVICE_UUID);
+      ;
+    return new ParcelUuid(mHeartRateService.getUuid());//Const.HEART_RATE_SERVICE_UUID);
   }
 
   private void setHeartRateMeasurementValue(int heartRateMeasurementValue, int expendedEnergy) {

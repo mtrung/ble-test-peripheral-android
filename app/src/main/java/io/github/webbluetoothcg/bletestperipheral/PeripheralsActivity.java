@@ -24,10 +24,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
-public class Peripherals extends ListActivity {
+public class PeripheralsActivity extends ListActivity {
 
-  // TODO(g-ortuno): Implement heart rate monitor peripheral
-  private static final String[] PERIPHERALS_NAMES = new String[]{"Battery", "Heart Rate Monitor"};
+  private static final String[] PERIPHERALS_NAMES = new String[] {
+          "My service", "Battery", "HRM"
+  };
+
   public final static String EXTRA_PERIPHERAL_INDEX = "PERIPHERAL_INDEX";
 
   @Override
@@ -45,7 +47,7 @@ public class Peripherals extends ListActivity {
   protected void onListItemClick(ListView l, View v, int position, long id) {
     super.onListItemClick(l, v, position, id);
 
-    Intent intent = new Intent(this, Peripheral.class);
+    Intent intent = new Intent(this, PeripheralActivity.class);
     intent.putExtra(EXTRA_PERIPHERAL_INDEX, position);
     startActivity(intent);
   }

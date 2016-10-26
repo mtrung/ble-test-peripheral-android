@@ -47,10 +47,10 @@ import java.util.UUID;
 
 import io.github.webbluetoothcg.bletestperipheral.ServiceFragment.ServiceFragmentDelegate;
 
-public class Peripheral extends Activity implements ServiceFragmentDelegate {
+public class PeripheralActivity extends Activity implements ServiceFragmentDelegate {
 
   private static final int REQUEST_ENABLE_BT = 1;
-  private static final String TAG = Peripheral.class.getCanonicalName();
+  private static final String TAG = PeripheralActivity.class.getCanonicalName();
   private static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT";
 
   private static final UUID CLIENT_CHARACTERISTIC_CONFIGURATION_UUID = UUID
@@ -129,7 +129,7 @@ public class Peripheral extends Activity implements ServiceFragmentDelegate {
         runOnUiThread(new Runnable() {
           @Override
           public void run() {
-            Toast.makeText(Peripheral.this, errorMessage, Toast.LENGTH_LONG).show();
+            Toast.makeText(PeripheralActivity.this, errorMessage, Toast.LENGTH_LONG).show();
           }
         });
         Log.e(TAG, "Error when connecting: " + status);
@@ -205,15 +205,19 @@ public class Peripheral extends Activity implements ServiceFragmentDelegate {
 
     // If we are not being restored from a previous state then create and add the fragment.
     if (savedInstanceState == null) {
-      int peripheralIndex = getIntent().getIntExtra(Peripherals.EXTRA_PERIPHERAL_INDEX,
+      int peripheralIndex = getIntent().getIntExtra(PeripheralsActivity.EXTRA_PERIPHERAL_INDEX,
           /* default */ -1);
+
       if (peripheralIndex == 0) {
-        mCurrentServiceFragment = new BatteryServiceFragment();
+        mCurrentServiceFragment = new MyServiceFragment();
       } else if (peripheralIndex == 1) {
+        mCurrentServiceFragment = new BatteryServiceFragment();
+      } else if (peripheralIndex == 2) {
         mCurrentServiceFragment = new HeartRateServiceFragment();
       } else {
         Log.wtf(TAG, "Service doesn't exist");
       }
+
       getFragmentManager()
           .beginTransaction()
           .add(R.id.fragment_container, mCurrentServiceFragment, CURRENT_FRAGMENT_TAG)
