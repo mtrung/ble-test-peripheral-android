@@ -10,7 +10,7 @@ public class MyServiceFragment extends BatteryServiceFragment {
 
     @Override
     public ParcelUuid getServiceUUID() {
-        return new ParcelUuid(Const.HEART_RATE_SERVICE_UUID);
+        return new ParcelUuid(Const.getUuid(Const.HEART_RATE_SERVICE_UUID_STR));
     }
 
 }

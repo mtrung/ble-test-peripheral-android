@@ -1,5 +1,8 @@
 package io.github.webbluetoothcg.bletestperipheral;
 
+import android.bluetooth.BluetoothGattDescriptor;
+import android.os.ParcelUuid;
+
 import java.util.UUID;
 
 /**
@@ -7,6 +10,13 @@ import java.util.UUID;
  */
 
 public class Const {
+//    static final UUID CLIENT_CHARACTERISTIC_CONFIGURATION_UUID = UUID
+//        .fromString("00002902-0000-1000-8000-00805f9b34fb");
+
+    static public ParcelUuid getParcelUuid(String uuidStr) {
+        return new ParcelUuid(getUuid(uuidStr));
+    }
+
     public static UUID getUuid(String uuidStr) {
         if (uuidStr.length() == 4)
             return UUID.fromString("0000"+uuidStr+"-0000-1000-8000-00805f9b34fb");
@@ -17,11 +27,12 @@ public class Const {
     public static final String HEART_RATE_SERVICE_UUID_STR = "180D";
     public static final String BATTERY_SERVICE_UUID_STR = "180F";
 
+    public static final String CLIENT_CHARACTERISTIC_CONFIGURATION_UUID_STR = "2902";
     /**
      * See <a href="https://developer.bluetooth.org/gatt/services/Pages/ServiceViewer.aspx?u=org.bluetooth.service.heart_rate.xml">
      * Heart Rate Service</a>
      */
-    public static final UUID HEART_RATE_SERVICE_UUID = getUuid(HEART_RATE_SERVICE_UUID_STR);
+//    public static final UUID HEART_RATE_SERVICE_UUID = getUuid(HEART_RATE_SERVICE_UUID_STR);
     /**
      * See <a href="https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml">
      * Heart Rate Measurement</a>
@@ -42,8 +53,16 @@ public class Const {
         .fromString("00002A39-0000-1000-8000-00805f9b34fb");
 
 
-    public static final UUID BATTERY_SERVICE_UUID = UUID
-        .fromString("0000180F-0000-1000-8000-00805f9b34fb");
+//    public static final UUID BATTERY_SERVICE_UUID = getUuid(BATTERY_SERVICE_UUID_STR);
+    //UUID.fromString("0000180F-0000-1000-8000-00805f9b34fb");
     public static final UUID BATTERY_LEVEL_UUID = UUID
             .fromString("00002A19-0000-1000-8000-00805f9b34fb");
+
+    ///////////////////////
+    ////// Bluetooth //////
+    ///////////////////////
+    public static BluetoothGattDescriptor getClientCharacteristicConfigurationDescriptor() {
+      return new BluetoothGattDescriptor(getUuid(CLIENT_CHARACTERISTIC_CONFIGURATION_UUID_STR),
+              (BluetoothGattDescriptor.PERMISSION_READ | BluetoothGattDescriptor.PERMISSION_WRITE));
+    }
 }

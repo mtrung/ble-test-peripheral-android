@@ -17,7 +17,7 @@
 package io.github.webbluetoothcg.bletestperipheral;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattServer;
 import android.bluetooth.BluetoothGattService;
 import android.os.Bundle;
 import android.os.ParcelUuid;
@@ -91,28 +91,11 @@ public class BatteryServiceFragment extends ServiceFragment {
   private final OnClickListener mNotifyButtonListener = new OnClickListener() {
     @Override
     public void onClick(View v) {
-      mDelegate.sendNotificationToDevices(mBatteryLevelCharacteristic);
+      mDelegate.sendNotificationToDevices(BatteryService.getInstance().mBatteryLevelCharacteristic);
     }
   };
 
-  // GATT
-  private BluetoothGattService mBatteryService;
-  private BluetoothGattCharacteristic mBatteryLevelCharacteristic;
-
   public BatteryServiceFragment() {
-    mBatteryLevelCharacteristic =
-        new BluetoothGattCharacteristic(Const.BATTERY_LEVEL_UUID,
-            BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-            BluetoothGattCharacteristic.PERMISSION_READ);
-
-    mBatteryLevelCharacteristic.addDescriptor(
-        PeripheralActivity.getClientCharacteristicConfigurationDescriptor());
-
-//    mBatteryService = new BluetoothGattService(Const.BATTERY_SERVICE_UUID,
-//        BluetoothGattService.SERVICE_TYPE_PRIMARY);
-//    mBatteryService.addCharacteristic(mBatteryLevelCharacteristic);
-
-      mBatteryService = GattServiceBuilder.build(Const.BATTERY_SERVICE_UUID_STR, mBatteryLevelCharacteristic);
   }
 
   // Lifecycle callbacks
@@ -151,18 +134,18 @@ public class BatteryServiceFragment extends ServiceFragment {
   }
 
   @Override
-  public BluetoothGattService getBluetoothGattService() {
-    return mBatteryService;
+  public void addService(BluetoothGattServer server) {
+      server.addService(BatteryService.getInstance());
   }
 
   @Override
   public ParcelUuid getServiceUUID() {
-    return new ParcelUuid(Const.BATTERY_SERVICE_UUID);
+    return BatteryService.getParcelUuid();
   }
 
   private void setBatteryLevel(int newBatteryLevel, View source) {
-    mBatteryLevelCharacteristic.setValue(newBatteryLevel,
-        BluetoothGattCharacteristic.FORMAT_UINT8, /* offset */ 0);
+      BatteryService.getInstance().setBatteryLevel(newBatteryLevel);
+
     if (source != mBatteryLevelSeekBar) {
       mBatteryLevelSeekBar.setProgress(newBatteryLevel);
     }

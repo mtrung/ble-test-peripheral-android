@@ -43,7 +43,6 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.UUID;
 
 import io.github.webbluetoothcg.bletestperipheral.ServiceFragment.ServiceFragmentDelegate;
 
@@ -53,13 +52,9 @@ public class PeripheralActivity extends Activity implements ServiceFragmentDeleg
   private static final String TAG = PeripheralActivity.class.getCanonicalName();
   private static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT";
 
-  private static final UUID CLIENT_CHARACTERISTIC_CONFIGURATION_UUID = UUID
-      .fromString("00002902-0000-1000-8000-00805f9b34fb");
-
-  private TextView mAdvStatus;
+    private TextView mAdvStatus;
   private TextView mConnectionStatus;
   private ServiceFragment mCurrentServiceFragment;
-  private BluetoothGattService mBluetoothGattService;
   private HashSet<BluetoothDevice> mBluetoothDevices;
   private BluetoothManager mBluetoothManager;
   private BluetoothAdapter mBluetoothAdapter;
@@ -226,7 +221,6 @@ public class PeripheralActivity extends Activity implements ServiceFragmentDeleg
       mCurrentServiceFragment = (ServiceFragment) getFragmentManager()
           .findFragmentByTag(CURRENT_FRAGMENT_TAG);
     }
-    mBluetoothGattService = mCurrentServiceFragment.getBluetoothGattService();
 
     mAdvSettings = new AdvertiseSettings.Builder()
         .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED)
@@ -282,7 +276,8 @@ public class PeripheralActivity extends Activity implements ServiceFragmentDeleg
     }
     // Add a service for a total of three services (Generic Attribute and Generic Access
     // are present by default).
-    mGattServer.addService(mBluetoothGattService);
+//    mGattServer.addService(mCurrentServiceFragment.getBluetoothGattService());
+      mCurrentServiceFragment.addService(mGattServer);
 
     if (mBluetoothAdapter.isMultipleAdvertisementSupported()) {
       mAdvertiser = mBluetoothAdapter.getBluetoothLeAdvertiser();
@@ -346,15 +341,7 @@ public class PeripheralActivity extends Activity implements ServiceFragmentDeleg
     });
   }
 
-  ///////////////////////
-  ////// Bluetooth //////
-  ///////////////////////
-  public static BluetoothGattDescriptor getClientCharacteristicConfigurationDescriptor() {
-    return new BluetoothGattDescriptor(CLIENT_CHARACTERISTIC_CONFIGURATION_UUID,
-            (BluetoothGattDescriptor.PERMISSION_READ | BluetoothGattDescriptor.PERMISSION_WRITE));
-  }
-
-  private void ensureBleFeaturesAvailable() {
+    private void ensureBleFeaturesAvailable() {
     if (mBluetoothAdapter == null) {
       Toast.makeText(this, R.string.bluetoothNotSupported, Toast.LENGTH_LONG).show();
       Log.e(TAG, "Bluetooth not supported");

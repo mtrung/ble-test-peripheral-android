@@ -19,11 +19,12 @@ package io.github.webbluetoothcg.bletestperipheral;
 import android.app.Fragment;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattServer;
 import android.bluetooth.BluetoothGattService;
 import android.os.ParcelUuid;
 
 public abstract class ServiceFragment extends Fragment{
-  public abstract BluetoothGattService getBluetoothGattService();
+  public abstract void addService(BluetoothGattServer mGattServer);
   public abstract ParcelUuid getServiceUUID();
 
   /**
