@@ -24,8 +24,8 @@ import android.bluetooth.BluetoothGattService;
 import android.os.ParcelUuid;
 
 public abstract class ServiceFragment extends Fragment{
-  public abstract void addService(BluetoothGattServer mGattServer);
-  public abstract ParcelUuid getServiceUUID();
+//  public abstract void addService(BluetoothGattServer mGattServer);
+//  public abstract ParcelUuid getServiceUUID();
 
   /**
    * Function to communicate to the ServiceFragment that a device wants to write to a

@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.os.ParcelUuid;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -32,7 +33,13 @@ public class BatteryService extends BluetoothGattService {
                         BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,
                         BluetoothGattCharacteristic.PERMISSION_READ);
 
-        mBatteryLevelCharacteristic.addDescriptor(Const.getClientCharacteristicConfigurationDescriptor());
+        try {
+            mBatteryLevelCharacteristic.addDescriptor(Const.getClientCharacteristicConfigurationDescriptor());
+        } catch (Exception e) {
+            Log.e("Char addDescriptor", e.getLocalizedMessage());
+        }
+
+        setBatteryLevel(50);
 
         addCharacteristic(mBatteryLevelCharacteristic);
     }

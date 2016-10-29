@@ -49,7 +49,7 @@ import io.github.webbluetoothcg.bletestperipheral.ServiceFragment.ServiceFragmen
 public class PeripheralActivity extends Activity implements ServiceFragmentDelegate {
 
   private static final int REQUEST_ENABLE_BT = 1;
-  private static final String TAG = PeripheralActivity.class.getCanonicalName();
+  private static final String TAG = PeripheralActivity.class.getSimpleName();
   private static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT";
 
     private TextView mAdvStatus;
@@ -135,8 +135,7 @@ public class PeripheralActivity extends Activity implements ServiceFragmentDeleg
     public void onCharacteristicReadRequest(BluetoothDevice device, int requestId, int offset,
         BluetoothGattCharacteristic characteristic) {
       super.onCharacteristicReadRequest(device, requestId, offset, characteristic);
-      Log.d(TAG, "Device tried to read characteristic: " + characteristic.getUuid());
-      Log.d(TAG, "Value: " + Arrays.toString(characteristic.getValue()));
+      Log.d(TAG, "onCharacteristicReadRequest: " + characteristic.getUuid() + " = " + Arrays.toString(characteristic.getValue()));
       if (offset != 0) {
         mGattServer.sendResponse(device, requestId, BluetoothGatt.GATT_INVALID_OFFSET, offset,
             /* value (optional) */ null);
@@ -229,7 +228,7 @@ public class PeripheralActivity extends Activity implements ServiceFragmentDeleg
         .build();
     mAdvData = new AdvertiseData.Builder()
         .setIncludeTxPowerLevel(true)
-        .addServiceUuid(mCurrentServiceFragment.getServiceUUID())
+        .addServiceUuid(Const.getParcelUuid(Const.HEART_RATE_SERVICE_UUID_STR))
         .build();
     mAdvScanResponse = new AdvertiseData.Builder()
         .setIncludeDeviceName(true)
@@ -274,10 +273,12 @@ public class PeripheralActivity extends Activity implements ServiceFragmentDeleg
       ensureBleFeaturesAvailable();
       return;
     }
-    // Add a service for a total of three services (Generic Attribute and Generic Access
-    // are present by default).
+    // Add services to server
+    // Generic Attribute and Generic Access are present by default.
 //    mGattServer.addService(mCurrentServiceFragment.getBluetoothGattService());
-      mCurrentServiceFragment.addService(mGattServer);
+    mGattServer.addService(DeviceInfoService.getInstance());
+    mGattServer.addService(BatteryService.getInstance());
+    mGattServer.addService(HrmService.getInstance());
 
     if (mBluetoothAdapter.isMultipleAdvertisementSupported()) {
       mAdvertiser = mBluetoothAdapter.getBluetoothLeAdvertiser();

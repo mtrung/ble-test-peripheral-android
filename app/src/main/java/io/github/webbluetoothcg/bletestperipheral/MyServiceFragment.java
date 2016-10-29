@@ -8,9 +8,9 @@ import android.os.ParcelUuid;
 
 public class MyServiceFragment extends BatteryServiceFragment {
 
-    @Override
-    public ParcelUuid getServiceUUID() {
-        return new ParcelUuid(Const.getUuid(Const.HEART_RATE_SERVICE_UUID_STR));
-    }
+//    @Override
+//    public ParcelUuid getServiceUUID() {
+//        return new ParcelUuid(Const.getUuid(Const.HEART_RATE_SERVICE_UUID_STR));
+//    }
 
 }

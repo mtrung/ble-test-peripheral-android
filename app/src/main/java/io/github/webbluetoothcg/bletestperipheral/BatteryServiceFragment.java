@@ -17,10 +17,7 @@
 package io.github.webbluetoothcg.bletestperipheral;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothGattServer;
-import android.bluetooth.BluetoothGattService;
 import android.os.Bundle;
-import android.os.ParcelUuid;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -131,16 +128,6 @@ public class BatteryServiceFragment extends ServiceFragment {
   public void onDetach() {
     super.onDetach();
     mDelegate = null;
-  }
-
-  @Override
-  public void addService(BluetoothGattServer server) {
-      server.addService(BatteryService.getInstance());
-  }
-
-  @Override
-  public ParcelUuid getServiceUUID() {
-    return BatteryService.getParcelUuid();
   }
 
   private void setBatteryLevel(int newBatteryLevel, View source) {

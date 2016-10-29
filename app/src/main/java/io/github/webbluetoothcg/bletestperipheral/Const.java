@@ -28,6 +28,13 @@ public class Const {
     public static final String BATTERY_SERVICE_UUID_STR = "180F";
 
     public static final String CLIENT_CHARACTERISTIC_CONFIGURATION_UUID_STR = "2902";
+
+    public static final String Serial_Number_String_UUID_STR = "2A25";
+    public static final String Manufacturer_Name_String_UUID_STR = "2A29";
+    public static final String Model_Number_String_UUID_STR = "2A24";
+    public static final String Firmware_Revision_String_UUID_STR = "2A26";
+    public static final String Software_Revision_String_UUID_STR = "2A28";
+
     /**
      * See <a href="https://developer.bluetooth.org/gatt/services/Pages/ServiceViewer.aspx?u=org.bluetooth.service.heart_rate.xml">
      * Heart Rate Service</a>

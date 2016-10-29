@@ -19,10 +19,7 @@ package io.github.webbluetoothcg.bletestperipheral;
 import android.app.Activity;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattServer;
-import android.bluetooth.BluetoothGattService;
 import android.os.Bundle;
-import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -163,16 +160,17 @@ public class HeartRateServiceFragment extends ServiceFragment {
     mDelegate = null;
   }
 
-    @Override
-    public void addService(BluetoothGattServer server) {
-        server.addService(BatteryService.getInstance());
-        server.addService(HrmService.getInstance());
-    }
-
-  @Override
-  public ParcelUuid getServiceUUID() {
-    return HrmService.getParcelUuid();
-  }
+//    @Override
+//    public void addService(BluetoothGattServer server) {
+//        server.addService(DeviceInfoService.getInstance());
+//        server.addService(BatteryService.getInstance());
+//        server.addService(HrmService.getInstance());
+//    }
+//
+//  @Override
+//  public ParcelUuid getServiceUUID() {
+//    return HrmService.getParcelUuid();
+//  }
 
   private void setHeartRateMeasurementValue(int heartRateMeasurementValue, int expendedEnergy) {
 

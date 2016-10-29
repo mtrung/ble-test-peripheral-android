@@ -3,8 +3,7 @@ package io.github.webbluetoothcg.bletestperipheral;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.os.ParcelUuid;
-
-import java.util.UUID;
+import android.util.Log;
 
 /**
  * Created by Trung Vo on 10/28/16.
@@ -30,13 +29,17 @@ public class HrmService extends BluetoothGattService {
                         BluetoothGattCharacteristic.PROPERTY_NOTIFY,
             /* No permissions */ 0);
 
-        mHeartRateMeasurementCharacteristic.addDescriptor(
-                Const.getClientCharacteristicConfigurationDescriptor());
+        try {
+            mHeartRateMeasurementCharacteristic.addDescriptor(Const.getClientCharacteristicConfigurationDescriptor());
+        } catch (Exception e) {
+            Log.e("Char addDescriptor", e.getLocalizedMessage());
+        }
 
         mBodySensorLocationCharacteristic =
                 new BluetoothGattCharacteristic(Const.BODY_SENSOR_LOCATION_UUID,
                         BluetoothGattCharacteristic.PROPERTY_READ,
                         BluetoothGattCharacteristic.PERMISSION_READ);
+        mBodySensorLocationCharacteristic.setValue(new byte[]{0});
 
         mHeartRateControlPoint =
                 new BluetoothGattCharacteristic(Const.HEART_RATE_CONTROL_POINT_UUID,
